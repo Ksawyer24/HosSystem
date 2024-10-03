@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       animation: {
-        'pop-up': 'pop-up 0.6s ease backwards',
+        'pop-up': 'pop-up 0.9s ease backwards',
       },
       keyframes: {
         'pop-up': {
