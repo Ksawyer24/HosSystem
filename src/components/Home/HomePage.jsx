@@ -1,16 +1,23 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 //import { Link } from 'react-router-dom';
 
 const HomePage = () => {
     const [isAnimating, setIsAnimating] = useState(false);
+    const navigate = useNavigate()
 
     const handleSignUpClick = () => {
         setIsAnimating(true);
         
-        // Redirect to sign-up page after a short delay
-        setTimeout(() => {
-            window.location.href = '/signup';
-        }, 300); // Match the timeout with the animation duration
+        navigate("/sign-up")
+    };
+
+    const handleSignInClick = () => {
+        setIsAnimating(true);
+        
+        navigate("/sign-in")
+        
     };
 
     return (
@@ -29,7 +36,10 @@ const HomePage = () => {
                     Sign Up
                 </button>
 
-                <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                <button 
+                 onClick={handleSignInClick}
+                className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+                >
                     Login
                 </button>
             </div>
