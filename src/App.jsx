@@ -1,7 +1,6 @@
 //import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import AddPatient from "./components/Patients/AddPatient";
 import HomePage from "./components/Home/HomePage";
 import SignUpForm from "./components/Auth/signUp";
 import SignInForm from "./components/Auth/login";
@@ -12,6 +11,10 @@ import StaffList from "./components/Staff/staffDetails";
 import LabTestList from "./components/LabTest/labTestDetails";
 import MedicalHistoryList from "./components/MedicalHistory/medicalHistoryList";
 import Layout from "./components/Home/layout";
+import AppointmentList from "./components/Appointments/AppointmentList";
+import InventoryList from "./components/Inventory/InventoryList";
+import BillingInv from "./components/Billing/billingInvoice";
+import Prescriptions from "./components/Prescription/prescription";
 
 function App() {
   return (
@@ -21,12 +24,14 @@ function App() {
         <Route path="/sign-up" element={<SignUpForm />} />
         <Route path="/sign-in" element={<SignInForm />} />
 
-        <Route path="" element={<Layout />}>
+         <Route path="" element={<Layout/>}>
           <Route path="/dash-home" element={<Dashboard />} />
 
           {/* patient routes */}
           <Route path="/patients" element={<PatientList />} />
-          <Route path="/add-patient" element={<AddPatient />} />
+         
+           {/* apppointment routes */}
+           <Route path="/appointments" element={<AppointmentList />} />
 
           {/* doctor routes */}
           <Route path="/doctors" element={<DoctorList />} />
@@ -34,11 +39,21 @@ function App() {
           {/* staff routes */}
           <Route path="/staff" element={<StaffList />} />
 
+          {/* inventory routes */}
+          <Route path="/inventory" element={<InventoryList />} />
+
           {/* lab test routes */}
           <Route path="/tests" element={<LabTestList />} />
 
           {/* medical history routes */}
           <Route path="/medical-history" element={<MedicalHistoryList />} />
+
+          {/* prescriptions routes */}
+          <Route path="/prescriptions" element={<Prescriptions />} />
+
+
+            {/* billing invoice routes */}
+            <Route path="/billing-invoice" element={<BillingInv />} />
         </Route>
       </Routes>
     </Router>

@@ -196,7 +196,7 @@ const PatientList = () => {
         },
       });
 
-      setPatients(
+      setPatients(//After successfully updating the patient on the server, this line updates the local patients state. It maps over the current list of patients and replaces the patient with the updated data if their ID matches editPatientData.id. This ensures that the user interface reflects the latest changes.
         patients.map((patient) =>
           patient.id === editPatientData.id ? editPatientData : patient
         )
@@ -207,11 +207,12 @@ const PatientList = () => {
     } catch (error) {
       console.error("Error updating patient:", error); 
     }
-    
   };
 
-  const openDeleteModal = (patientId) => { //represents what the user wants to delete
-    setDeletePatientId(patientId); //this allows the app to know the selected patient
+  //represents the id to be deleted
+  
+  const openDeleteModal = (patientId) => {
+    setDeletePatientId(patientId);
     setShowDeleteModal(true);
   };
 
@@ -229,12 +230,9 @@ const PatientList = () => {
       });
 
       setPatients(patients.filter((patient) => patient.id !== deletePatientId));
-    } 
-    catch (error) {
+    } catch (error) {
       console.error("Error deleting patient:", error);
-    } 
-
-    finally {
+    } finally {
       setShowDeleteModal(false);
       setDeletePatientId(null);
     }

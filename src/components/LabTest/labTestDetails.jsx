@@ -16,6 +16,8 @@ const LabTestList = () => {
         notes: "",
       });
 
+
+
     useEffect(() => {
         const fetchLabTests = async () => {
             try {
@@ -82,14 +84,13 @@ const LabTestList = () => {
 
     const openAddModal = () => {
         setNewTestData({
-        name: "",
-        dateOfBirth: "",
-        specialization: "",
-        yearsOfExperience: "",
-        contactNumber: "",
-        email: "",
-        address: "",
-        workingDays: "",
+          patientId: "",
+          mls: "",
+          reviewedBy: "",
+          testName: "",
+          testDate: "",
+          results: "",
+          notes: "",
         });
         setShowAddModal(true);
 
@@ -138,24 +139,26 @@ const LabTestList = () => {
                             ))}
 
 
-
-
-
-
-                                     {/* Add Modal */}
+         {/* Add Modal */}
         {showAddModal && newTestData && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded shadow-lg w-1/3">
-              <h3 className="text-lg font-bold mb-4">Add New Staff Member</h3>
+              <h3 className="text-lg font-bold mb-4">Add new lab test</h3>
               <form>
                 <label className="block mb-2">Patient Id</label>
                 <input
                   type="text"
-                  name="patientName"
+                  name="patientId"
                   value={newTestData.patientId}
-                  onChange={newTestData}
+                  onChange={handleAddChange}
                   className="w-full h-10 mb-4  border border-gray-300 rounded"
                 />
+
+                {/* <select>
+                  <option value={}>
+                    
+                  </option>
+                </select> */}
 
                 <label className="block mb-2">Mls</label>
                 <input
@@ -169,7 +172,7 @@ const LabTestList = () => {
                 <label className="block mb-2">Reviewed By</label>
                 <input
                   type="text"
-                  name="patientContact"
+                  name="reviewedBy"
                   value={newTestData.reviewedBy}
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4  border border-gray-300 rounded"
@@ -178,25 +181,25 @@ const LabTestList = () => {
                 <label className="block mb-2">Test Name</label>
                 <input
                   type="text"
-                  name="position"
+                  name="testName"
                   value={newTestData.testName}
-                  onChange={newTestData}
+                  onChange={handleAddChange}
                   className="w-full h-10 mb-4  border border-gray-300 rounded"
                 />
 
                 <label className="block mb-2">Test Date</label>
                 <input
-                  type="text"
-                  name="patientContact"
+                  type="date"
+                  name="testDate"
                   value={newTestData.testDate}
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4  border border-gray-300 rounded"
                 />
 
               <label className="block mb-2">Results</label>
-                <input
+                <textarea
                   type="text"
-                  name="patientContact"
+                  name="results"
                   value={newTestData.results}
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4  border border-gray-300 rounded"
@@ -204,17 +207,14 @@ const LabTestList = () => {
 
 
                <label className="block mb-2">Notes</label>
-                <input
+                <textarea
                   type="text"
-                  name="patientContact"
+                  name="notes"
                   value={newTestData.notes}
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4  border border-gray-300 rounded"
                 />
 
-
-
-                
               </form>
               <div className="flex justify-end">
                 <button

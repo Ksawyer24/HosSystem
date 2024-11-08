@@ -12,7 +12,8 @@ import {
   faFileMedical,
   faArrowLeft,
   faCalendar,
-} from "@fortawesome/free-solid-svg-icons";
+}
+ from "@fortawesome/free-solid-svg-icons";
 
 function SideBar() {
   return (
@@ -23,7 +24,7 @@ function SideBar() {
           <li>
             <Link
               to="/dash-home"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
               <FontAwesomeIcon icon={faHome} className="mr-4" />
               Home
@@ -32,7 +33,7 @@ function SideBar() {
           <li>
             <Link
               to="/patients"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
               <FontAwesomeIcon icon={faUser} className="mr-4" />
               Patients
@@ -41,7 +42,7 @@ function SideBar() {
           <li>
             <Link
               to="/doctors"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
               <FontAwesomeIcon icon={faUserMd} className="mr-4" />
               Doctors
@@ -50,7 +51,7 @@ function SideBar() {
           <li>
             <Link
               to="/staff"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
               <FontAwesomeIcon icon={faUsers} className="mr-4" />
               Staff
@@ -59,7 +60,7 @@ function SideBar() {
           <li>
             <Link
               to="/tests"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
               <FontAwesomeIcon icon={faVial} className="mr-4" />
               Tests
@@ -68,16 +69,17 @@ function SideBar() {
           <li>
             <Link
               to="/medical-history"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
               <FontAwesomeIcon icon={faFileMedical} className="mr-4" />
               Medical History
             </Link>
           </li>
+
           <li>
             <Link
               to="/appointments"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
               <FontAwesomeIcon icon={faCalendar} className="mr-4" />
               Appointments
@@ -87,9 +89,9 @@ function SideBar() {
           <li>
             <Link
               to="/inventory"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
-              <FontAwesomeIcon icon={faBox} className="mr-4" /> 
+              <FontAwesomeIcon icon={faBox} className="mr-4" />
               Inventory
             </Link>
           </li>
@@ -97,9 +99,9 @@ function SideBar() {
           <li>
             <Link
               to="/billing-invoice"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
-              <FontAwesomeIcon icon={faFileInvoice} className="mr-4" /> 
+              <FontAwesomeIcon icon={faFileInvoice} className="mr-4" />
               Billing Invoice
             </Link>
           </li>
@@ -107,27 +109,12 @@ function SideBar() {
           <li>
             <Link
               to="/prescriptions"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
-              <FontAwesomeIcon icon={faPrescription} className="mr-4" /> 
+              <FontAwesomeIcon icon={faPrescription} className="mr-4" />
               Prescription
             </Link>
           </li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         </ul>
       </div>
 
@@ -136,7 +123,7 @@ function SideBar() {
           <li>
             <Link
               to="/sign-in"
-              className="flex items-center text-white hover:underline"
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
             >
               <FontAwesomeIcon icon={faArrowLeft} className="mr-4" />
               Logout

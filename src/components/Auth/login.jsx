@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const SignInForm = () => {
@@ -7,7 +7,7 @@ const SignInForm = () => {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => { 
         e.preventDefault();
@@ -16,18 +16,17 @@ const SignInForm = () => {
             username: userName,
             password: password,
         })
-
         .then((response) => {
             console.log('Login successful!');
-            
-            
-
             localStorage.setItem('authToken', response.data);
             setIsLoginSuccessful(true);
             setErrorMessage('');
-            navigate("/dash-home")
-        })
 
+            // Display welcome message for 2 seconds, then navigate to dashboard
+            setTimeout(() => {
+                navigate("/dash-home");
+            }, 2000); // 2000 ms = 2 seconds
+        })
         .catch((error) => {
             if (error.response) {
                 setErrorMessage(error.response.data.message || 'Login failed, incorrect username or password');
@@ -53,7 +52,7 @@ const SignInForm = () => {
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3 mb-8 leading-tight focus:outline-none focus:bg-white"
                             id="username"
                             type="text"
-                            placeholder="jdoe"
+                            placeholder="username"
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
                         />
@@ -96,12 +95,6 @@ const SignInForm = () => {
                             Sign In
                         </button>
                     </div>
-                </div>
-
-                <div className="flex justify-end px-3">
-                    <Link to="/sign-up" className="text-white underline text-xs">
-                       No Account? Sign Up
-                    </Link>
                 </div>
             </form>
         </div>

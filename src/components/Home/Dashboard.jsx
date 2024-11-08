@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
@@ -16,25 +15,25 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchCounts = async () => {
             try {
-                const API_URL = 'https://localhost:7265/api'; // Adjust the base URL as needed
+                const API_URL = 'https://localhost:7265/api'; 
                 const token = localStorage.getItem('authToken'); // Get the token from localStorage
 
-                setLoading(true); // Set loading to true before fetching data
+                setLoading(true); 
 
                 const [patientsResponse, doctorsResponse, staffResponse] = await Promise.all([
                     axios.get(`${API_URL}/patients/patients-total`, {
                         headers: {
-                            Authorization: `Bearer ${token}`, // Include the token here
+                            Authorization: `Bearer ${token}`, 
                         },
                     }),
                     axios.get(`${API_URL}/doctors/doctors-total`, {
                         headers: {
-                            Authorization: `Bearer ${token}`, // Include the token here
+                            Authorization: `Bearer ${token}`, 
                         },
                     }),
                     axios.get(`${API_URL}/staff/staff-total`, {
                         headers: {
-                            Authorization: `Bearer ${token}`, // Include the token here
+                            Authorization: `Bearer ${token}`, 
                         },
                     }),
                 ]);

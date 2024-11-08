@@ -109,42 +109,47 @@ const DoctorList = () => {
     };
 
     const handleEditChange = (e) => {
-        const { name, value } = e.target;
-        setEditDoctorData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+      const { name, value } = e.target;
+      setEditDoctorData((prevData) => ({
+          ...prevData,
+          [name]: value,
+      }));
     };
-
-    const handleUpdate = async () => {
-        if (!editDoctorData) return;
-
-        try {
-            const API_URL = `https://localhost:7265/api/doctors/${editDoctorData.id}`; // Adjust API endpoint
-            const token = localStorage.getItem('authToken');
-
-            await axios.put(API_URL, editDoctorData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            setDoctors(doctors.map((doctor) =>
-                doctor.id === editDoctorData.id ? editDoctorData : doctor
-            ));
-        } catch (error) {
-            console.error('Error updating doctor:', error);
-        } finally {
-            setShowEditModal(false);
-            setEditDoctorData(null);
-        }
-    };
+    
+  
+  const handleUpdate = async () => {
+      if (!editDoctorData) return;
+  
+      try {
+          const API_URL = `https://localhost:7265/api/doctors/${editDoctorData.id}`; // Corrected with backticks for template literal
+          const token = localStorage.getItem('authToken');
+  
+          await axios.put(API_URL, editDoctorData, {
+              headers: {
+                  Authorization: `Bearer ${token}`, // Corrected with template literal for token
+              },
+          });
+  
+          setDoctors(doctors.map((doctor) =>
+              doctor.id === editDoctorData.id ? editDoctorData : doctor
+          ));
+      }
+      catch (error) {
+          console.error('Error updating doctor:', error);
+      } 
+      finally {
+          setShowEditModal(false);
+          setEditDoctorData(null);
+      }
+  };
 
     const openDeleteModal = (doctorId) => {
         setDeleteDoctorId(doctorId);
         setShowDeleteModal(true);
     };
 
+
+    
     const handleDelete = async () => {
         if (!deleteDoctorId) return;
 
@@ -234,6 +239,7 @@ const DoctorList = () => {
           name="name"
           value={newDoctorData.name}
           onChange={handleAddChange}
+          required
           className="w-full h-10 mb-4 border border-gray-300 rounded"
         />
 
@@ -266,7 +272,7 @@ const DoctorList = () => {
         
         <label className="block mb-2">Contact Number</label>
         <input
-          type="text"
+          type="tel"
           name="contactNumber"
           value={newDoctorData.contactNumber}
           onChange={handleAddChange}
@@ -323,55 +329,49 @@ const DoctorList = () => {
 
 
 
-
-
-
-
-
                 {/* Edit Modal */}
-                {showEditModal && editDoctorData && (
+                {showEditModal &&  (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center overflow-auto">
     <div className="bg-white p-6 rounded shadow-md w-full md:w-1/2 lg:w-1/3 max-h-screen overflow-y-auto">
       <h2 className="text-lg font-bold mb-4">Edit Doctor</h2>
       <form>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={editDoctorData.name}
-            onChange={handleEditChange}
-            className="border border-gray-300 p-2 rounded w-full"
-          />
+          <label className="block text-sm font-medium mb-1">Patient Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={editDoctorData.name}
+                  onChange={handleEditChange}
+                  className="w-full mb-4 p-2 border border-gray-300 rounded"
+                />
         </div>
+        
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="dateOfBirth">Date of Birth</label>
+          <label className="block text-sm font-medium mb-1" >Date of Birth</label>
           <input
             type="date"
-            id="dateOfBirth"
             name="dateOfBirth"
             value={new Date(editDoctorData.dateOfBirth).toISOString().split('T')[0]}
             onChange={handleEditChange}
             className="border border-gray-300 p-2 rounded w-full"
           />
         </div>
+
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="specialization">Specialization</label>
+          <label className="block text-sm font-medium mb-1">Specialization</label>
           <input
             type="text"
-            id="specialization"
             name="specialization"
             value={editDoctorData.specialization}
             onChange={handleEditChange}
             className="border border-gray-300 p-2 rounded w-full"
           />
         </div>
+
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="yearsOfExperience">Years of Experience</label>
+          <label className="block text-sm font-medium mb-1" >Years of Experience</label>
           <input
             type="number"
-            id="yearsOfExperience"
             name="yearsOfExperience"
             value={editDoctorData.yearsOfExperience}
             onChange={handleEditChange}
@@ -379,10 +379,9 @@ const DoctorList = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="contactNumber">Contact Number</label>
+          <label className="block text-sm font-medium mb-1" >Contact Number</label>
           <input
-            type="text"
-            id="contactNumber"
+            type="tel"
             name="contactNumber"
             value={editDoctorData.contactNumber}
             onChange={handleEditChange}
@@ -390,32 +389,31 @@ const DoctorList = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="email">Email</label>
+          <label className="block text-sm font-medium mb-1">Email</label>
           <input
             type="email"
-            id="email"
             name="email"
             value={editDoctorData.email}
             onChange={handleEditChange}
             className="border border-gray-300 p-2 rounded w-full"
           />
         </div>
+        
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="address">Address</label>
+          <label className="block text-sm font-medium mb-1">Address</label>
           <input
             type="text"
-            id="address"
             name="address"
             value={editDoctorData.address}
             onChange={handleEditChange}
             className="border border-gray-300 p-2 rounded w-full"
           />
         </div>
+
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="workingDays">Working Days</label>
+          <label className="block text-sm font-medium mb-1">Working Days</label>
           <input
             type="text"
-            id="workingDays"
             name="workingDays"
             value={editDoctorData.workingDays}
             onChange={handleEditChange}
@@ -446,17 +444,27 @@ const DoctorList = () => {
 
                 {/* Delete Modal */}
                 {showDeleteModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                        <div className="bg-white p-6 rounded shadow-md">
-                            <h2 className="text-lg font-bold mb-4">Confirm Delete</h2>
-                            <p>Are you sure you want to delete this doctor?</p>
-                            <div className="flex justify-end mt-4">
-                                <button type="button" onClick={handleDelete} className="bg-red-600 text-white py-2 px-4 rounded mr-2">Delete</button>
-                                <button type="button" onClick={() => setShowDeleteModal(false)} className="bg-gray-300 text-black py-2 px-4 rounded">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+              <div className="bg-white p-6 rounded shadow-lg w-1/3">
+                <h3 className="text-lg font-bold mb-4">Delete Doctor</h3>
+                <p>Are you sure you want to delete this doctor?</p>
+                <div className="flex justify-end mt-4">
+                  <button
+                    onClick={handleDelete}
+                    className="bg-red-600 text-white px-4 py-2 rounded mr-2 hover:bg-red-400"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
             </main>
         </div>
     );
