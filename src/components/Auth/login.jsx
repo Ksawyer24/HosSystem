@@ -22,7 +22,7 @@ const SignInForm = () => {
             setIsLoginSuccessful(true);
             setErrorMessage('');
 
-            // Display welcome message for 2 seconds, then navigate to dashboard
+            // Display welcome message then navigate to dashboard
             setTimeout(() => {
                 navigate("/dash-home");
             }, 2000); // 2000 ms = 2 seconds

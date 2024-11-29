@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus} from '@fortawesome/free-solid-svg-icons';
+import {z} from "zod"
 
 const LabTestList = () => {
     const [labTests, setLabTests] = useState([]);
@@ -15,6 +16,7 @@ const LabTestList = () => {
         results: "",
         notes: "",
       });
+      const [formErrors, setFormErrors] = useState({});
 
 
 
@@ -40,8 +42,44 @@ const LabTestList = () => {
     }, []);
 
 
+    const testSchema = z.object({
+      patientId: z
+      .coerce
+      .number({
+        required_error: "Patient ID is required",
+        invalid_type_error: "Patient ID must be a number",
+      })
+      .min(1, { message: "Patient ID must be at least 1" }),
+
+
+      mls: z.string().min(1, "Medical Laboratory Scientist is required"),
+      reviewedBy: z.string().min(1, "Reviewed By is required"),
+      testName: z.string().min(1, "Test Name is required"),
+      testDate: z.string().min(1, "Test Date is required"),
+      results: z.string().min(1, "Results is required"),
+    
+    });
+
+
 
     const handleAddTest = async () => {
+
+      const result = testSchema.safeParse(newTestData);
+      if (!result.success) {
+        const errors = result.error.format();
+        
+        setFormErrors({
+          patientId: errors.patientId?._errors[0],
+          mls: errors.mls?._errors[0],
+          reviewedBy: errors.reviewedBy?._errors[0],
+          testName: errors.testName?._errors[0],
+          testDate: errors.testDate?._errors[0],
+          results: errors.results?._errors[0],
+         
+        });
+        return;
+      }
+
 
         try {
           const API_URL = "https://localhost:7265/api/labtests/labtest-add";
@@ -139,101 +177,112 @@ const LabTestList = () => {
                             ))}
 
 
-         {/* Add Modal */}
-        {showAddModal && newTestData && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded shadow-lg w-1/3">
-              <h3 className="text-lg font-bold mb-4">Add new lab test</h3>
-              <form>
-                <label className="block mb-2">Patient Id</label>
-                <input
-                  type="text"
-                  name="patientId"
-                  value={newTestData.patientId}
-                  onChange={handleAddChange}
-                  className="w-full h-10 mb-4  border border-gray-300 rounded"
-                />
-
-                {/* <select>
-                  <option value={}>
-                    
-                  </option>
-                </select> */}
-
-                <label className="block mb-2">Mls</label>
-                <input
-                  type="text"
-                  name="mls"
-                  value={newTestData.mls}
-                  onChange={handleAddChange}
-                  className="w-full h-10 mb-4  border border-gray-300 rounded"
-                />
-
-                <label className="block mb-2">Reviewed By</label>
-                <input
-                  type="text"
-                  name="reviewedBy"
-                  value={newTestData.reviewedBy}
-                  onChange={handleAddChange}
-                  className="w-full h-10 mb-4  border border-gray-300 rounded"
-                />
-                
-                <label className="block mb-2">Test Name</label>
-                <input
-                  type="text"
-                  name="testName"
-                  value={newTestData.testName}
-                  onChange={handleAddChange}
-                  className="w-full h-10 mb-4  border border-gray-300 rounded"
-                />
-
-                <label className="block mb-2">Test Date</label>
-                <input
-                  type="date"
-                  name="testDate"
-                  value={newTestData.testDate}
-                  onChange={handleAddChange}
-                  className="w-full h-10 mb-4  border border-gray-300 rounded"
-                />
-
-              <label className="block mb-2">Results</label>
-                <textarea
-                  type="text"
-                  name="results"
-                  value={newTestData.results}
-                  onChange={handleAddChange}
-                  className="w-full h-10 mb-4  border border-gray-300 rounded"
-                />
-
-
-               <label className="block mb-2">Notes</label>
-                <textarea
-                  type="text"
-                  name="notes"
-                  value={newTestData.notes}
-                  onChange={handleAddChange}
-                  className="w-full h-10 mb-4  border border-gray-300 rounded"
-                />
-
-              </form>
-              <div className="flex justify-end">
-                <button
-                  onClick={handleAddTest}
-                  className="bg-blue-600 text-white px-4 py-2 rounded mr-2 hover:bg-blue-400"
-                >
-                  Add
-                </button>
-
-                <button
-                  onClick={() => setShowAddModal(false)}
-                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
+        {/* Add Modal */}
+{showAddModal && newTestData && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div className="bg-white p-6 rounded shadow-lg w-1/3 max-h-[80vh] overflow-y-auto"> {/* Add max height and scroll */}
+      <h3 className="text-lg font-bold mb-4">Add new lab test</h3>
+      <form>
+        <label className="block mb-2">Patient Id</label>
+        <input
+          type="text"
+          name="patientId"
+          value={newTestData.patientId}
+          onChange={handleAddChange}
+          className="w-full h-10 mb-4  border border-gray-300 rounded"
+        />
+        {formErrors.patientId && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.patientId}</p>
         )}
+
+        <label className="block mb-2">Mls</label>
+        <input
+          type="text"
+          name="mls"
+          value={newTestData.mls}
+          onChange={handleAddChange}
+          className="w-full h-10 mb-4  border border-gray-300 rounded"
+        />
+        {formErrors.mls && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.mls}</p>
+        )}
+
+        <label className="block mb-2">Reviewed By</label>
+        <input
+          type="text"
+          name="reviewedBy"
+          value={newTestData.reviewedBy}
+          onChange={handleAddChange}
+          className="w-full h-10 mb-4  border border-gray-300 rounded"
+        />
+        {formErrors.reviewedBy && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.reviewedBy}</p>
+        )}
+
+        <label className="block mb-2">Test Name</label>
+        <input
+          type="text"
+          name="testName"
+          value={newTestData.testName}
+          onChange={handleAddChange}
+          className="w-full h-10 mb-4  border border-gray-300 rounded"
+        />
+        {formErrors.testName && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.testName}</p>
+        )}
+
+        <label className="block mb-2">Test Date</label>
+        <input
+          type="date"
+          name="testDate"
+          value={newTestData.testDate}
+          onChange={handleAddChange}
+          className="w-full h-10 mb-4  border border-gray-300 rounded"
+        />
+        {formErrors.testDate && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.testDate}</p>
+        )}
+
+        <label className="block mb-2">Results</label>
+        <textarea
+          type="text"
+          name="results"
+          value={newTestData.results}
+          onChange={handleAddChange}
+          className="w-full h-10 mb-4  border border-gray-300 rounded"
+        />
+        {formErrors.results && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.results}</p>
+        )}
+
+        <label className="block mb-2">Notes</label>
+        <textarea
+          type="text"
+          name="notes"
+          value={newTestData.notes}
+          onChange={handleAddChange}
+          className="w-full h-10 mb-4  border border-gray-300 rounded"
+        />
+      </form>
+      <div className="flex justify-end">
+        <button
+          onClick={handleAddTest}
+          className="bg-blue-600 text-white px-4 py-2 rounded mr-2 hover:bg-blue-400"
+        >
+          Add
+        </button>
+
+        <button
+          onClick={() => setShowAddModal(false)}
+          className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
                         </tbody>
                     </table>

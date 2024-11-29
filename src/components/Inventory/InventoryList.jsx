@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {z} from "zod"
 
 const InventoryList = () => {
     
@@ -20,6 +21,7 @@ const InventoryList = () => {
     const [editInventoryData, setEditInventoryData] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteInventoryId, setDeleteInventoryId] = useState(null);
+    const [formErrors, setFormErrors] = useState({});
   
     useEffect(() => {
       const fetchInventory = async () => {
@@ -63,12 +65,87 @@ const InventoryList = () => {
       const { name, value } = e.target;
       SetInventoryData({ ...newInventoryData, [name]: value });
     };
+
+
+
+    const inventorySchema = z.object({
+      name: z.string().min(1, "Name is required"),
+      dateOfDelivery: z.date({
+        invalid_type_error: "Delivery Date must be  valid ",
+      }),
+
+      expiryDate: z.date({
+        invalid_type_error: "Expiry Date must be valid ",
+      }),
+
+      quantity: z.string().min(1, "Quantity is required"),
+      
+      supplier: z.string().min(1, "Supplier is required"),
+
+      supplierContact: z
+      .string()
+      .regex(
+        /^\+?(\d{1,3})?[-.\s]?(\(?\d{1,4}\)?[-.\s]?)?(\d{1,4}[-.\s]?){1,3}\d{1,4}$/,
+        "Supplier Contact must be a valid phone number"
+      ),
+    });
   
   
   
   
     const handleSubmit = async (e) => {
+
+
+
+
+      // const errors = {};
+
+      // // Validatig my field here
+      // if (!newInventoryData.name) errors.name = "Name is required.";
+  
+      // if (!newInventoryData.dateOfDelivery) errors.dateOfDelivery = "Date of Delivery is required.";
+  
+      // if (!newInventoryData.expiryDate) errors.expiryDate = "Expiry Date is required.";
+  
+      // if (!newInventoryData.quantity) errors.quantity = "Quantity is required.";
+      
+      // if (!newInventoryData.supplier) errors.supplier = "Supplier is required.";
+  
+      // if (!newInventoryData.supplierContact) errors.supplierContact = "Supplier Contact is required.";
+  
+  
+      // // If there are errors, update formErrors state and stop execution
+      // if (Object.keys(errors).length > 0) {
+      //   setFormErrors(errors);
+      //   return;
+      // }
+  
+      // // Clear previous errors if validation passes
+      // setFormErrors({});
+
+
+
+
+
       e.preventDefault();
+
+      const result = inventorySchema.safeParse(newInventoryData);
+      if (!result.success) {
+        const errors = result.error.format();
+        setFormErrors({
+          name: errors.name?._errors[0],
+          dateOfDelivery: errors.dateOfDelivery?._errors[0],
+          expiryDate: errors.expiryDate?._errors[0],
+          quantity: errors.quantity?._errors[0],
+          supplier: errors.supplier?._errors[0],
+          supplierContact: errors.supplierContact?._errors[0],
+        });
+        return;
+      }
+
+
+
+
       const token = localStorage.getItem("authToken");
   
       console.log(newInventoryData)
@@ -287,18 +364,26 @@ const InventoryList = () => {
                     type="text"
                     name="name"
                     value={newInventoryData.name}
+                    required
                     onChange={handleAddChange}
                     className="w-full h-10 mb-4 border border-gray-300 rounded"
                   />
+                   {formErrors.name && (
+                  <p className="text-red-500 text-sm mb-4">{formErrors.name}</p>
+                )}
   
                   <label className="block mb-2">Date Of Delivery</label>
                   <input
                     type="date"
                     name="dateOfDelivery"
                     value={newInventoryData.dateOfDelivery}
+                    required
                     onChange={handleAddChange}
                     className="w-full h-10 mb-4 border border-gray-300 rounded"
                   />
+                   {formErrors.dateOfDelivery && (
+                  <p className="text-red-500 text-sm mb-4">{formErrors.dateOfDelivery}</p>
+                )}
   
                   <label className="block mb-2">Expiry Date</label>
                   <input
@@ -308,6 +393,9 @@ const InventoryList = () => {
                     onChange={handleAddChange}
                     className="w-full h-10 mb-4 border border-gray-300 rounded"
                   />
+                   {formErrors.expiryDate && (
+                  <p className="text-red-500 text-sm mb-4">{formErrors.expiryDate}</p>
+                )}
   
                   <label className="block mb-2">Quantity</label>
                   <input
@@ -317,6 +405,9 @@ const InventoryList = () => {
                     onChange={handleAddChange}
                     className="w-full h-10 mb-4 border border-gray-300 rounded"
                   />
+                   {formErrors.quantity && (
+                  <p className="text-red-500 text-sm mb-4">{formErrors.quantity}</p>
+                )}
   
   
                   <label className="block mb-2">Supplier</label>
@@ -327,6 +418,9 @@ const InventoryList = () => {
                     onChange={handleAddChange}
                     className="w-full h-10 mb-4 border border-gray-300 rounded"
                   />
+                   {formErrors.supplier && (
+                  <p className="text-red-500 text-sm mb-4">{formErrors.supplier}</p>
+                )}
                   
                   <label className="block mb-2">Supplier Contact</label>
                   <input
@@ -336,6 +430,9 @@ const InventoryList = () => {
                     onChange={handleAddChange}
                     className="w-full h-10 mb-4 border border-gray-300 rounded"
                   />
+                   {formErrors.supplierContact && (
+                  <p className="text-red-500 text-sm mb-4">{formErrors.supplierContact}</p>
+                )}
                   
                 </form>
                 <div className="flex justify-end">

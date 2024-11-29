@@ -18,6 +18,7 @@ const StaffList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [editStaffData, setEditStaffData] = useState(null);
   const [deleteStaffId, setDeleteStaffId] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     const fetchStaff = async () => {
@@ -41,6 +42,29 @@ const StaffList = () => {
   }, []);
 
   const handleAddStaff = async () => {
+    const errors = {};
+
+    if(!newStaffData.name) errors.name = "Name is required";
+
+    if(!newStaffData.dateOfBirth) errors.dateOfBirth = "Date Of Birth is required";
+
+    if(!newStaffData.phoneNumber) errors.phoneNumber = "Phone Number is required";
+
+    if(!newStaffData.position) errors.position = "Position is required";
+
+    if(!newStaffData.yearsOfEmployment) errors.yearsOfEmployment = "Years Of Employment is required";
+
+    if(!newStaffData.workingDays) errors.workingDays = "Working Days is required";
+
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+
+
+
     try {
       const API_URL = "https://localhost:7265/api/staff/staff-add";
       const token = localStorage.getItem("authToken");
@@ -215,9 +239,15 @@ const StaffList = () => {
                   type="text"
                   name="name"
                   value={newStaffData.name}
+                  required
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                 {formErrors.name && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.name}
+                  </p>
+                )}
 
                 <label className="block mb-2">Date of Birth</label>
                 <input
@@ -227,6 +257,11 @@ const StaffList = () => {
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                 {formErrors.dateOfBirth && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.dateOfBirth}
+                  </p>
+                )}
 
                 <label className="block mb-2">Phone Number</label>
                 <input
@@ -236,6 +271,11 @@ const StaffList = () => {
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                 {formErrors.phoneNumber && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.phoneNumber}
+                  </p>
+                )}
 
                 <label className="block mb-2">Position</label>
                 <input
@@ -245,6 +285,11 @@ const StaffList = () => {
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                 {formErrors.position && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.position}
+                  </p>
+                )}
 
                 <label className="block mb-2">Years of Employment</label>
                 <input
@@ -254,6 +299,11 @@ const StaffList = () => {
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                 {formErrors.yearsOfEmployment && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.yearsOfEmployment}
+                  </p>
+                )}
 
                 <label className="block mb-2">Working Days</label>
                 <input
@@ -263,6 +313,11 @@ const StaffList = () => {
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                 {formErrors.workingDays && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.workingDays}
+                  </p>
+                )}
 
                 <div className="flex justify-end">
                   <button

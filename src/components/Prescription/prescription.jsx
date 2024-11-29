@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {z} from "zod"
 
 const Prescriptions = () => {
     
@@ -18,6 +19,7 @@ const Prescriptions = () => {
     const [editPrescriptionData, setEditPrescriptionData] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deletePrescriptionId, setDeletePrescriptionId] = useState(null);
+    const [formErrors, setFormErrors] = useState({})
   
     useEffect(() => {
       const fetchPrescription = async () => {
@@ -59,11 +61,41 @@ const Prescriptions = () => {
       const { name, value } = e.target;
       SetPrescriptionsData({ ...newPrescriptiontData, [name]: value });
     };
+
+    const prescriptionSchema = z.object({
+  
+      name: z.string().min(1, "Name is required"),
+      dosage: z.string().min(1, "Dosage is required"),
+      dateIssued: z.string().min(1, "Dosage is required"),
+      patientId: z.string().min(1, "Patient's Id is required"),
+    });
+
+
   
   
   
   
     const handleSubmit = async (e) => {
+
+      const result = prescriptionSchema.safeParse(newPrescriptiontData);
+    if (!result.success) {
+      const errors = result.error.format();
+      
+      setFormErrors({
+        name: errors.name?._errors[0],
+        dosage: errors.dosage?._errors[0],
+        dateIssued: errors.dateIssued?._errors[0],
+        patientId: errors.patientId?._errors[0],
+      
+      });
+      return;
+    }
+
+
+
+
+
+
       e.preventDefault();
       const token = localStorage.getItem("authToken");
   
@@ -264,6 +296,9 @@ const Prescriptions = () => {
                     onChange={handleAddChange}
                     className="w-full h-10 mb-4 border border-gray-300 rounded"
                   />
+                  {formErrors.name && (
+                  <p className="text-red-500 text-sm mb-4">{formErrors.name}</p>
+                )}
   
                   <label className="block mb-2">Dosage</label>
                   <input
@@ -273,6 +308,9 @@ const Prescriptions = () => {
                     onChange={handleAddChange}
                     className="w-full h-10 mb-4 border border-gray-300 rounded"
                   />
+                  {formErrors.dosage && (
+                  <p className="text-red-500 text-sm mb-4">{formErrors.dosage}</p>
+                )}
   
                   <label className="block mb-2">Date Issued</label>
                   <input
@@ -282,6 +320,9 @@ const Prescriptions = () => {
                     onChange={handleAddChange}
                     className="w-full h-10 mb-4 border border-gray-300 rounded"
                   />
+                  {formErrors.dateIssued && (
+                  <p className="text-red-500 text-sm mb-4">{formErrors.dateIssued}</p>
+                )}
   
                   <label className="block mb-2">Patient ID</label>
                   <input
@@ -291,6 +332,9 @@ const Prescriptions = () => {
                     onChange={handleAddChange}
                     className="w-full h-10 mb-4 border border-gray-300 rounded"
                   />
+                  {formErrors.patientId && (
+                  <p className="text-red-500 text-sm mb-4">{formErrors.patientId}</p>
+                )}
   
                   
                 </form>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {z} from "zod"
 
 const PatientList = () => {
   const [patients, setPatients] = useState([]);
@@ -26,6 +27,7 @@ const PatientList = () => {
   const [editPatientData, setEditPatientData] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePatientId, setDeletePatientId] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -40,8 +42,7 @@ const PatientList = () => {
         });
 
         setPatients(response.data);
-      } 
-      catch (error) {
+      } catch (error) {
         console.error("Error fetching patient data:", error);
       }
     };
@@ -111,7 +112,36 @@ const PatientList = () => {
     }));
   };
 
+  const patientSchema = z.object({
+  
+    patientName: z.string().min(1, "Pateient's Name is required"),
+    patientContact: z.string().min(1, "Pateient's Contact is required"),
+    dateOfBirth: z.string().min(1, "Date Of Birth is required"),
+    nameOfEmergencyContact: z.string().min(1, "Emergency Contact's Name is required"),
+    phoneNumberOfContact: z.string().min(1, "Phone Number Of Emergency Contact is required"),
+  
+  });
+
+
+
   const handleSubmit = async (e) => {
+   
+    const result = patientSchema.safeParse(newPatientData);
+    if (!result.success) {
+      const errors = result.error.format();
+      
+      setFormErrors({
+        patientName: errors.patientName?._errors[0],
+        patientContact: errors.patientContact?._errors[0],
+        dateOfBirth: errors.dateOfBirth?._errors[0],
+        nameOfEmergencyContact: errors.nameOfEmergencyContact?._errors[0],
+        phoneNumberOfContact: errors.phoneNumberOfContact?._errors[0],
+       
+      });
+      return;
+    }
+
+
     e.preventDefault();
     const token = localStorage.getItem("authToken");
 
@@ -163,10 +193,8 @@ const PatientList = () => {
             ...prevData.medicalHistory,
             [key]: updatedList,
           },
-
         }));
-      }
-       else {
+      } else {
         setEditPatientData((prevData) => ({
           ...prevData,
           medicalHistory: {
@@ -205,12 +233,12 @@ const PatientList = () => {
       setShowEditModal(false); // Close modal after updating
       setEditPatientData(null);
     } catch (error) {
-      console.error("Error updating patient:", error); 
+      console.error("Error updating patient:", error);
     }
-    
   };
 
-  const openDeleteModal = (patientId) => { //represents what the user wants to delete
+  const openDeleteModal = (patientId) => {
+    //represents what the user wants to delete
     setDeletePatientId(patientId); //this allows the app to know the selected patient
     setShowDeleteModal(true);
   };
@@ -229,12 +257,9 @@ const PatientList = () => {
       });
 
       setPatients(patients.filter((patient) => patient.id !== deletePatientId));
-    } 
-    catch (error) {
+    } catch (error) {
       console.error("Error deleting patient:", error);
-    } 
-
-    finally {
+    } finally {
       setShowDeleteModal(false);
       setDeletePatientId(null);
     }
@@ -360,9 +385,15 @@ const PatientList = () => {
                   type="text"
                   name="patientName"
                   value={newPatientData.patientName}
+                  required
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                {formErrors.patientName && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.patientName}
+                  </p>
+                )}
 
                 <label className="block mb-2">Contact</label>
                 <input
@@ -372,82 +403,124 @@ const PatientList = () => {
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                {formErrors.patientContact && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.patientContact}
+                  </p>
+                )}
 
                 <label className="block mb-2">Date of Birth</label>
                 <input
                   type="date"
                   name="dateOfBirth"
                   value={newPatientData.dateOfBirth}
+                  required
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                {formErrors.dateOfBirth && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.dateOfBirth}
+                  </p>
+                )}
 
                 <label className="block mb-2">Name Of Emergency Contact</label>
                 <input
                   type="text"
                   name="nameOfEmergencyContact"
                   value={newPatientData.nameOfEmergencyContact}
+                  required
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                {formErrors.nameOfEmergencyContact && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.nameOfEmergencyContact}
+                  </p>
+                )}
 
                 <label className="block mb-2">Phone Number Of Contact</label>
                 <input
                   type="tel"
                   name="phoneNumberOfContact"
                   value={newPatientData.phoneNumberOfContact}
+                  required
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 />
+                {formErrors.phoneNumberOfContact && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.phoneNumberOfContact}
+                  </p>
+                )}
 
                 <label className="block mb-2">Insurance Active</label>
                 <select
                   name="insuranceIsActive"
                   value={newPatientData.insuranceIsActive ? "true" : "false"}
+                  required
                   onChange={handleAddChange}
                   className="w-full h-10 mb-4 border border-gray-300 rounded"
                 >
                   <option value="true">Yes</option>
                   <option value="false">No</option>
                 </select>
+              
 
                 <label className="block mb-2">Conditions</label>
                 <input
                   type="text"
                   name="medicalHistory.conditions"
                   value={newPatientData.medicalHistory.conditions}
+                  required
                   onChange={(e) =>
                     handleArrayChange("conditions", e.target.value)
                   }
                   className="w-full h-10 border border-gray-300 rounded mb-4"
                 />
+            
+                
+                
 
                 <label className="block mb-2">Medications</label>
                 <input
                   type="text"
                   name="medicalHistory.medications"
                   value={newPatientData.medicalHistory.medications}
+                  required
                   onChange={(e) =>
                     handleArrayChange("medications", e.target.value)
                   }
                   className="w-full h-10 border border-gray-300 rounded mb-4"
                 />
+                  {formErrors.medications && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {formErrors.medications}
+                  </p>
+                )}
 
+
+
+             
                 <label className="block mb-2">Allergies</label>
                 <input
                   type="text"
                   name="medicalHistory.allergies"
                   value={newPatientData.medicalHistory.allergies}
+                  required
                   onChange={(e) =>
                     handleArrayChange("allergies", e.target.value)
                   }
                   className="w-full h-10 border border-gray-300 rounded mb-4"
                 />
+             
+
                 <label className="block mb-2">Had Surgery</label>
                 <input
                   type="checkbox"
                   name="medicalHistory.hadSurgery"
                   checked={newPatientData.medicalHistory.hadSurgery}
+                  required
                   onChange={(e) =>
                     setNewPatientData((prevData) => ({
                       ...prevData,
@@ -460,6 +533,8 @@ const PatientList = () => {
                   className="w-5 h-5 mb-4 border border-gray-300 rounded"
                 />
 
+              
+
                 <label className="block mb-2">Notes</label>
                 <textarea
                   type="text"
@@ -468,6 +543,8 @@ const PatientList = () => {
                   onChange={handleAddChange}
                   className="w-full h-20 mb-4 border border-gray-300 rounded"
                 />
+               
+
               </form>
               <div className="flex justify-end">
                 <button

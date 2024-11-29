@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
@@ -12,10 +12,15 @@ import {
   faFileMedical,
   faArrowLeft,
   faCalendar,
-}
- from "@fortawesome/free-solid-svg-icons";
+} from "@fortawesome/free-solid-svg-icons";
 
 function SideBar() {
+  const navigate = useNavigate();
+  function handleLogout() {
+    localStorage.removeItem("authToken");
+    navigate("/sign-in");
+  }
+
   return (
     <aside className="sticky top-0 w-64 bg-blue-600 p-4 text-white shadow-md flex flex-col justify-between h-screen">
       <div>
@@ -121,13 +126,13 @@ function SideBar() {
       <div className="mt-auto">
         <ul>
           <li>
-            <Link
-              to="/sign-in"
-              className="flex items-center text-white hover:bg-blue-400 hover:p-2"
+            <button
+              onClick={handleLogout}
+              className="flex items-center text-white hover:bg-blue-400 hover:p-2 w-full"
             >
               <FontAwesomeIcon icon={faArrowLeft} className="mr-4" />
               Logout
-            </Link>
+            </button>
           </li>
         </ul>
       </div>
